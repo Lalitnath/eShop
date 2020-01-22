@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth')->except('index');
+        // $this->middleware('auth')->except('index');
     }
 
 
@@ -21,7 +22,7 @@ class ProductController extends Controller
     public function index()
     {
         $allProducts=Product::all();
-        return view('products.index',['allProducts'=>$allProducts]);
+        return view('products.index',['products'=>$allProducts]);
     }
 
     /**
@@ -42,15 +43,37 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+            //add validate
+            $request-validate([
+                'name'=>'required',
+                'price'=>'required',
+                'cover_image'=>'required|image'
+
+            ]);
+
+
+
         $product = new Product();
-        $product->name = $request->input('name'); 
-        $product->price = $request->input('price'); 
-        $product->description = $request->input('description'); 
+        $product->name = $request->input('name');
+        $product->price = $request->input('price');
+
+
+              //for the image store
+                if($request->has('cover_image')){
+                //store file
+                $filePath = $request->file('cover_image')->store('products');
+
+                //saving file in database
+                $product->cover_image=$filePath;
+                }
+
+
+                $product->description = $request->input('description');
 
         $product->save();
         return redirect()->route('products.index');
-    
-    
+
+
     }
 
     /**
@@ -73,7 +96,7 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         return view('products.edit',compact('product'));
-        
+
     }
 
     /**
@@ -85,9 +108,34 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
+            //add validate
+            $request->validate([
+                'name'=>'required',
+                'price'=>'required',
+                'cover_image'=>'required|image'
+
+            ]);
+
+
+
         $product->name = $request->input('name');
         $product->price = $request->input('price');
+
+    //for the image store
+    if($request->has('cover_image')){
+
+        Storage::delete($product->cover_image);//delete the old image
+        //store file
+        $filePath = $request->file('cover_image')->store('products');
+
+        //saving file in database
+        $product->cover_image=$filePath;
+        }
+
+
         $product->description = $request->input('description');
+
+
 
         $product->save();
 
@@ -104,7 +152,10 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
+
         $product->delete();
+        Storage::delete($product->cover_image);//delete the old image
+
         return redirect()->route('products.index');
     }
 }

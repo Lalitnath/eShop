@@ -59,7 +59,7 @@
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="#">
+                  <a class="nav-link" href="{{route('products.index')}}">
                       <span data-feather="shopping-cart"></span>
                       Products
                     </a>
@@ -123,7 +123,7 @@
 
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
 
-        @yield('content')
+             @yield('content')
         </main>
 
     </div>
