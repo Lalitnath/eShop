@@ -10,7 +10,7 @@ class ProductController extends Controller
 {
     public function __construct()
     {
-        // $this->middleware('auth')->except('index');
+        $this->middleware('auth')->except('index');
     }
 
 
@@ -22,6 +22,8 @@ class ProductController extends Controller
     public function index()
     {
         $allProducts=Product::all();
+        // $allProducts=Product::get();
+
         return view('products.index',['products'=>$allProducts]);
     }
 
