@@ -20,6 +20,8 @@ Route::resource('products','ProductController');
 Auth::routes();
 
 Route::get('/', 'HomeController@index')->name('home');
+Route::get('add-to-cart/{product}', 'ProductController@addTocart')->name('cart');
+
 
 Route::get('admin', function () {
     return view('admin.dashboard');
