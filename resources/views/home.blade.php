@@ -17,7 +17,7 @@
                     <p class="card-text">{{$item->description}}</p>
                 </div>
                 <div class="card-body">
-                <a class="btn btn-primary "href="{{route('cart',$item->id)}}" class="card-link">Add to Cart</a>
+                <a class="btn btn-primary "href="{{route('carts.addToCart',$item->id)}}" class="card-link">Add to Cart</a>
                 </div>
             </div>
         </div>
